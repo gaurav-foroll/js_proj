@@ -1,0 +1,104 @@
+<!doctype html>
+
+
+<!-- css variables with js -->
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>css var with js</title>
+    </head>
+
+
+    <body>
+
+        <h2>update css variables with <span class="hl">Js</span></h2>
+
+        <div class="controls">
+            <label for="spacing">spacing:</label>
+            <input type="range" name="spacing" min="10" max="200" value="10" data-sizing="px">
+            
+            <label for="blur">blur:</label>
+            <input type="range" name="blur" min="0" max="25" value="0" data-sizing="px">
+
+            <label for="base">base color:</label>
+            <input type="color" name="base" value="#ffc600">
+
+            
+        </div>
+
+        <img src="https://picsum.photos/652/367">
+
+        <style>
+            :root {
+
+                --base: #ffc600;
+                --spacing: 10px;
+                --blur: 0px;
+            }
+
+            img {
+
+                padding: var(--spacing);
+                background: var(--base);
+                filter: blur(var(--blur));
+            }
+
+            .hl {
+
+                color: var(--base);
+            }
+
+            body {
+
+                text-align: center;
+            }
+
+            body {
+
+                background: #193549;
+                color: white;
+                font-family: 'helvetica neue', sans-serif;
+                font-weight: 100;
+                font-size: 50px;
+            }
+
+            .controls {
+
+                margin-bottom: 50px;
+
+            }
+
+            a {
+
+                color: var(--base);
+                text-decoration: none;
+            }
+
+            input {
+
+                width: 100px;
+            }
+        </style>
+
+
+        <script>
+
+            const inputs = document.querySelectorAll(".controls input"); //this gives nodelist not an array
+            
+            function handleUpdate() {
+                const suffix = this.dataset.sizing || '';
+
+                document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix);
+            }
+
+            inputs.forEach(input => {
+
+                // input.addEventListener('change', handleUpdate);
+                // input.addEventListener('mousemove', handleUpdate);
+                input.addEventListener('input', handleUpdate);
+            });
+        </script>
+    </body>
+</html>
