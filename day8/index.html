@@ -1,0 +1,139 @@
+<!doctype html>
+
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <title>html 5 canvas</title>
+        <link rel="icon" href="https://fav.farm/🔥" />
+
+    </head>
+
+
+    <body>
+
+        <canvas id="draw" width="800" height="800"></canvas>
+        <div class="buttons">
+            <button class="clear">clear</button>
+            <button class="round_cap">round_cap</button>
+            <button class="round_join">round_join</button>
+        </div>
+
+        <script>
+
+            let isDrawing = false;
+            let last_x = 0;
+            let last_y = 0;
+            let hue = 0;
+            let direction = true;
+
+
+
+            const eraser = document.createElement("button");
+            eraser.textContent = "eraser";
+            document.querySelector(".buttons").appendChild(eraser);
+
+            const canvas = document.querySelector("#draw");
+            const ctx = canvas.getContext("2d");
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight-100;
+            ctx.lineJoin = "round";
+            ctx.lineCap = "round";
+
+            function draw(e){
+                if(!isDrawing) return;
+                if(isErasing){
+                    ctx.strokeStyle = "white";
+                    ctx.lineWidth = "40";
+                } else {
+                    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+                    
+                }
+                ctx.beginPath();
+                ctx.moveTo(last_x, last_y);
+                ctx.lineTo(e.offsetX, e.offsetY);
+                ctx.stroke();
+                [last_x, last_y] = [e.offsetX, e.offsetY];
+                // last_x = e.offsetX;
+                // last_y = e.offsetY;
+                // console.log(e);
+                if(!isErasing){
+                    hue++;
+
+                    if(hue >= 360) hue = 0;
+                    if(ctx.lineWidth >= 100 || ctx.lineWidth <= 1){
+                        direction = !direction;
+                    }
+                    if(direction){
+                        ctx.lineWidth++;
+                    } else {
+                        ctx.lineWidth--;
+                    }
+
+                }
+                
+                
+
+            }
+
+            canvas.addEventListener("mousedown", (e)=>{
+
+                isDrawing = true;
+                [last_x, last_y] = [e.offsetX, e.offsetY];
+            });
+
+            canvas.addEventListener("mousemove", draw);
+            
+            canvas.addEventListener("mouseup", ()=> isDrawing = false);
+            canvas.addEventListener("mouseout", ()=> isDrawing = false);
+            
+            
+            const clear_button = document.querySelector(".clear");
+            const round_cap_button = document.querySelector(".round_cap");
+            const round_line_join_button = document.querySelector(".round_join");
+            
+
+            const brush_button = document.createElement("button");
+            brush_button.textContent = "brush";
+            document.querySelector(".buttons").appendChild(brush_button);
+
+            
+            clear_button.addEventListener("click", ()=>{
+                // ctx.reset();
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            });
+
+
+            round_cap_button.addEventListener("click", ()=>{
+                ctx.lineCap = ctx.lineCap === "round" ? "square" : "round";
+            });
+
+
+            round_line_join_button.addEventListener("click", ()=>{
+                ctx.lineJoin = ctx.lineJoin === "round" ? "bevel" : "round";
+            });
+
+
+            eraser.addEventListener("click", ()=>{
+                isErasing = true;
+                
+            });
+
+            brush_button.addEventListener("click", ()=>{
+                isErasing = false;
+            });
+        </script>
+
+        <style>
+            html, body {
+                margin:0;
+            }
+            .buttons{
+                display:flex;
+                justify-content: space-around;
+            }
+        </style>
+
+    </body>
+
+</html>
